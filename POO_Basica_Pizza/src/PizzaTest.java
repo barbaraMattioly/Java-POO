@@ -1,12 +1,11 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-
 public class PizzaTest {
-    private static final double VALORBASE = 25;
+    private static final BigDecimal VALORBASE = new BigDecimal(25.0);
     Pizza pizza;
 
     @BeforeEach
@@ -21,39 +20,36 @@ public class PizzaTest {
     }
 
     @Test
-    public void deveCalcularPrecoPizzaDeAcordoComNumeroDeAcrescimos() {
+    public void deveCalcularPrecoPizzaCorretoDeAcordoComNumeroDeAcrescimos() {
         pizza.adicionarAcrescimos(4);
-        assertEquals(pizza.calcularValorTotal(), 41);
+        pizza.adicionarAcrescimos(2);
+        assertEquals(pizza.calcularValorTotal(), BigDecimal.valueOf(49));
     }
 
     @Test
-    public void deveRetornarFalsoAoTentarAdicionarMaisDeOitoAdicionais(){
-        assertFalse(pizza.adicionarAcrescimos(9));
-    }
-
-    @Test
-    public void deveRetornarVerdadeiroAoTentarAdicionarUmNumeroDeAdicionaisEntreZeroOito(){
-        assertTrue(pizza.adicionarAcrescimos(8));
-    }
-
-    @Test
-    public void deveRetornarZeroAoCalcularValorDaPizzaCasoQuantidadeDeAdicionaisSejaMaiorQueOito(){
+    public void deveRetornarValorBasePizzaAoTentarAdicionarMaisDeOitoAdicionais(){
         pizza.adicionarAcrescimos(15);
-        assertEquals(pizza.calcularValorTotal(), 0);
+        assertEquals(pizza.calcularValorTotal(), VALORBASE);
+    }
+
+    @Test
+    public void deveRetornarValorBaseAoCalcularValorDaPizzaCasoQuantidadeDeAdicionaisSejaMenorQueOito(){
+        pizza.adicionarAcrescimos(-3);
+        assertEquals(pizza.calcularValorTotal(), VALORBASE);
     }
 
     @Test
     public void deveGerarNotaComDescricaoValor(){
         pizza.adicionarAcrescimos(5);
         pizza.calcularValorTotal();
-        assertEquals(pizza.gerarNota(), "Valor a ser pago: R$45.0 | Descrição: 5 acréscimos");
+        assertEquals(pizza.gerarNota(), "Valor pizza: R$45 | Descrição: 5 acréscimos");
     }
 
     @Test
-    public void deveRetornarDescricaoVaziaCasoNumeroDeAdicionaisSejaMaiorQueOito(){
+    public void deveRetornarDescricaoComIngredientesZeroEValorBaseCasoNumeroDeAdicionaisSejaMaiorQueOito(){
         pizza.adicionarAcrescimos(10);
         pizza.calcularValorTotal();
-        assertEquals(pizza.gerarNota(), "");
+        assertEquals(pizza.gerarNota(), "Valor pizza: R$25 | Descrição: 0 acréscimos");
     }
 
 }
